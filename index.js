@@ -6,7 +6,9 @@ require('dotenv').config()
 
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173'  // Replace this with your frontend URL
+}));
 connectDB()
 
 // Fetch user by Telegram ID

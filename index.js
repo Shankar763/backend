@@ -7,7 +7,7 @@ require('dotenv').config()
 const app = express()
 app.use(express.json())
 app.use(cors({
-    origin: 'http://localhost:5173'  // Replace this with your frontend URL
+    origin: 'https://bbq1-six.vercel.app'  // Replace this with your frontend URL
 }));
 connectDB()
 

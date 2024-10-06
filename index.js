@@ -52,6 +52,39 @@ app.post('/user/:telegramId', async (req, res) => {
     }
 })
 
+app.post('/user/:telegramId/task_check', async (req, res) => {
+    const { telegramId } = req.params;
+    const { task, award } = req.body;  // Task and award passed in the request body
+
+    try {
+        // Search for user by Telegram ID
+        const user = await itemModel.findOne({ telegramId });
+
+        if (!user) {
+            // Return message if user is not found
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the task is already completed by the user
+        const taskCompleted = user.task_done.includes(task); // Assuming `task_done` is an array in the user schema
+        if (taskCompleted) {
+            return res.json({ message: 'Task already completed', taskCompleted: true });
+        }
+
+        // If task is not completed, add it to task_done and award points
+        user.task_done.push(task);
+        user.points = user.points + award;  // Increment user points with the award value
+        await user.save();  // Save the updated user data
+
+        return res.json({ message: 'Task added and points awarded successfully', taskCompleted: false, user });
+    } catch (error) {
+        console.error("Error updating user data:", error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+
 app.listen(process.env.PORT, () => {
     console.log("App is running");
 })

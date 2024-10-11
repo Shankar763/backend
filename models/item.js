@@ -8,6 +8,7 @@ const itemSchema = new mongoose.Schema({
     lastPointsUpdateTimestamp: { type: Date, default: Date.now }, // Last update to points
     lastEnergyUpdateTimestamp: { type: Date, default: Date.now }, // Last update to energy
     lastEnergyRefillsTimestamp: { type: Date, default: Date.now }, // Last time energy refills were updated
+    levels: [{ title: String, level: Number, achievedAt: Date }] // Track levels with titles
 });
 
 // Create the model using the schema

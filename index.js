@@ -28,6 +28,45 @@ app.get('/user/:telegramId', async (req, res) => {
     }
 });
 
+// Upgrade user task level, PPH, and points
+app.post('/user/:telegramId/upgrade', async (req, res) => {
+    const { telegramId } = req.params;
+    const { title, newLevel, newPPH, pointsForUpgrade, pointsToDeduct } = req.body;
+
+    try {
+        // Find the user by Telegram ID
+        const user = await itemModel.findOne({ telegramId });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the task (by title) already exists in the user's levels
+        const taskIndex = user.levels.findIndex(level => level.title === title);
+        if (taskIndex >= 0) {
+            // Task exists, update its level and PPH
+            user.levels[taskIndex].level = newLevel;
+            user.levels[taskIndex].achievedAt = new Date(); // Update the achievement time
+        } else {
+            // Task doesn't exist, add a new task with level 1
+            user.levels.push({ title, level: newLevel, achievedAt: new Date() });
+        }
+
+        // Deduct points from user
+        user.points -= pointsToDeduct;
+        user.pph += newPPH;  // Update PPH (profit per hour)
+        user.lastPointsUpdateTimestamp = new Date();  // Update points update timestamp
+
+        await user.save();  // Save the updated user data
+
+        return res.json({ success: true, user });
+    } catch (error) {
+        console.error("Error upgrading task:", error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 // Update or create user by Telegram ID
 app.post('/user/:telegramId', async (req, res) => {
     const { telegramId } = req.params;

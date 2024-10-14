@@ -7,5 +7,5 @@ const itemSchema = new mongoose.Schema({
 });
 
 // Create the model using the schema
-const refer = mongoose.model("Item", itemSchema);
+const refer = mongoose.model("reffer", itemSchema);
 module.exports = refer;

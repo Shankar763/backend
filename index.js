@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require('./db.js');
 const itemModel = require('./models/item.js');
-const refer = require('./models/item.js');  // Assuming 'itemModel' is renamed to 'User'
+const refer = require('./models/referral.js');  // Assuming 'itemModel' is renamed to 'User'
 const cors = require('cors');
 require('dotenv').config();
 

@@ -1,7 +1,7 @@
 const express = require('express');
 const connectDB = require('./db.js');
 const itemModel = require('./models/item.js');
-const User = require('./models/item.js');  // Assuming 'itemModel' is renamed to 'User'
+const refer = require('./models/item.js');  // Assuming 'itemModel' is renamed to 'User'
 const cors = require('cors');
 require('dotenv').config();
 
@@ -143,11 +143,11 @@ app.post('/user/referrals', async (req, res) => {
     console.log('Incoming data:', userId, referrerId);
 
     // Check if the user already exists
-    let user = await itemModel.findOne({ userId });
+    let user = await refer.findOne({ userId });
 
     if (!user) {
       console.log('Creating new user');
-      user = new itemModel({ userId, referrerId, referrals: [] });
+      user = new refer({ userId, referrerId, referrals: [] });
     }
 
     // Save referrer if not self-referring and referrer not already added
@@ -174,7 +174,7 @@ app.get('/user/referrals', async (req, res) => {
 
   try {
     console.log('Fetching referrals for userId:', userId);
-    const user = await itemModel.findOne({ userId });
+    const user = await refer.findOne({ userId });
 
     if (!user) {
       return res.json({ referrals: [], referrer: null });

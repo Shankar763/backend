@@ -131,7 +131,7 @@ app.post('/user/:telegramId/task_check', async (req, res) => {
 
 
 // POST: Save referral information
-app.post('/user/referrals', async (req, res) => {
+app.post('/refer/referrals', async (req, res) => {
   const { userId, referrerId } = req.body;
 
   if (!userId || !referrerId) {
@@ -165,7 +165,7 @@ app.post('/user/referrals', async (req, res) => {
 });
 
 // GET: Fetch referral data
-app.get('/user/referrals', async (req, res) => {
+app.get('/refer/referrals', async (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {

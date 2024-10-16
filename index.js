@@ -18,7 +18,7 @@ app.get('/user/checkdb/:telegramId', async (req, res) => {
     const { telegramId } = req.params;
 
     try {
-        const user = await User.findOne({ telegramId });
+        const user = await itemModel.findOne({ telegramId });
     
         if (user) {
           res.status(200).json(user);  // User found, send back the user data
@@ -39,13 +39,13 @@ app.post('/user/create/:telegramId', async (req, res) => {
   
     try {
       // Check if the user already exists (extra safety)
-      let user = await User.findOne({ telegramId });
+      let user = await itemModel.findOne({ telegramId });
   
       if (user) {
         return res.status(400).json({ message: 'User already exists' });
       } 
 
-      user = new User({
+      user = new itemModel({
         telegramId,  // Only setting the telegramId; all other fields will use default values
       });
       await user.save();  // Save the user in the database

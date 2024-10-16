@@ -14,7 +14,7 @@ app.use(cors({
 connectDB();
 
 // Route to check if a user exists by telegramId
-app.get('user/checkdb/:telegramId', async (req, res) => {
+app.get('/user/checkdb/:telegramId', async (req, res) => {
     const { telegramId } = req.params;
 
     try {
@@ -34,7 +34,7 @@ app.get('user/checkdb/:telegramId', async (req, res) => {
 
 
 // Route to create a new user
-app.post('user/create/:telegramId', async (req, res) => {
+app.post('/user/create/:telegramId', async (req, res) => {
     const { telegramId} =  req.params;
   
     try {

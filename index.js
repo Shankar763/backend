@@ -13,6 +13,75 @@ app.use(cors({
 }));
 connectDB();
 
+// Route to check if a user exists by telegramId
+app.get('user/checkdb/:telegramId', async (req, res) => {
+    const { telegramId } = req.params;
+
+    try {
+        const user = await User.findOne({ telegramId });
+    
+        if (user) {
+          res.status(200).json(user);  // User found, send back the user data
+        } else {
+          res.status(404).json({ message: 'User not found' });
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+   
+});
+
+
+// Route to create a new user
+app.post('user/create/:telegramId', async (req, res) => {
+    const { telegramId} =  req.params;
+  
+    try {
+      // Check if the user already exists (extra safety)
+      let user = await User.findOne({ telegramId });
+  
+      if (user) {
+        return res.status(400).json({ message: 'User already exists' });
+      } 
+
+      user = new User({
+        telegramId,  // Only setting the telegramId; all other fields will use default values
+      });
+      await user.save();  // Save the user in the database
+      res.status(201).json(user);  // Return the newly created user data
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+
+//update user points
+// Update or create user by Telegram ID
+app.post('/user/updatepoints:telegramId', async (req, res) => {
+    const { telegramId } = req.params;
+    const updatedPoints = req.body;
+
+    try {
+        let user = await itemModel.findOne({ telegramId }); // Search for user by Telegram ID
+        if (user) {
+            // Update user data
+            user.points =updatedPoints.points;
+            user.lastPointsUpdateTimestamp = new Date();
+            await user.save();
+        } else {
+            // Create a new user
+            return res.status(404).json({ message: 'User not found' }); // User not found
+        }
+        return res.json({ success: true, user });
+    } catch (error) {
+        console.error("Error updating points:", error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
 // Fetch user by Telegram ID
 app.get('/user/:telegramId', async (req, res) => {
     const { telegramId } = req.params;

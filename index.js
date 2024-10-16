@@ -61,13 +61,13 @@ app.post('/user/create/:telegramId', async (req, res) => {
 // Update or create user by Telegram ID
 app.post('/user/updatepoints:telegramId', async (req, res) => {
     const { telegramId } = req.params;
-    const updatedPoints = req.body;
+    const {points} = req.body;
 
     try {
         let user = await itemModel.findOne({ telegramId }); // Search for user by Telegram ID
         if (user) {
             // Update user data
-            user.points =updatedPoints.points;
+            user.points =points;
             user.lastPointsUpdateTimestamp = new Date();
             await user.save();
         } else {

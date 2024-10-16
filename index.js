@@ -59,7 +59,7 @@ app.post('/user/create/:telegramId', async (req, res) => {
 
 //update user points
 // Update or create user by Telegram ID
-app.post('/user/updatepoints:telegramId', async (req, res) => {
+app.post('/user/updatepoints/:telegramId', async (req, res) => {
     const { telegramId } = req.params;
     const {points} = req.body;
 

@@ -64,7 +64,11 @@ app.post('/user/updatepoints:telegramId', async (req, res) => {
     const {points} = req.body;
 
     try {
-        let user = await itemModel.findOne({ telegramId }); // Search for user by Telegram ID
+        let user = await itemModel.findOneAndUpdate(
+            { telegramId },
+            { $set: { points: points } },
+            { new: true }
+        ); // Search for user by Telegram ID
         if (user) {
             // Update user data
             user.points =points;

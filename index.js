@@ -67,9 +67,10 @@ app.post('/user/updatepoints/:telegramId', async (req, res) => {
         let user = await itemModel.findOne({ telegramId }); // Search for user by Telegram ID
         if (user) {
             // Update user data
-            user.points =points;
+            user.points =points !== undefined ? points : user.points;;
             user.lastPointsUpdateTimestamp = new Date();
             await user.save();
+            return res.json({ success: true, user });
         } else {
             // Create a new user
             return res.status(404).json({ message: 'User not found' }); // User not found

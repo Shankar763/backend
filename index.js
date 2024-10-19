@@ -257,6 +257,109 @@ app.get('/refer/referrals', async (req, res) => {
   }
 });
 
+// Route to upgrade Full Tank
+app.post('/user/:telegramId/full_tank_upgrade', async (req, res) => {
+  const { telegramId } = req.params;
+
+  try {
+      const user = await itemModel.findOne({ telegramId });
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Check if the last upgrade was more than 24 hours ago
+      const lastUpgrade = new Date(user.lastFullTankUpgradeTimestamp);
+      const now = new Date();
+      const timeDiff = now - lastUpgrade;
+
+      if (timeDiff >= 24 * 60 * 60 * 1000) {
+          // Reset the full tank count if 24 hours have passed
+          user.fullTankCount = 0;
+      }
+
+      if (user.fullTankCount >= 3) {
+          return res.status(400).json({ message: 'Full Tank upgrade limit reached for today' });
+      }
+
+      // Increment the count and update the timestamp
+      user.fullTankCount += 1;
+      user.lastFullTankUpgradeTimestamp = now;
+
+      await user.save();
+      return res.json({ success: true, fullTankCount: user.fullTankCount });
+  } catch (error) {
+      console.error("Error upgrading Full Tank:", error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// Route to upgrade Multitap
+app.post('/user/:telegramId/multitap_upgrade', async (req, res) => {
+  const { telegramId } = req.params;
+
+  try {
+      const user = await itemModel.findOne({ telegramId });
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Calculate the coin cost for the next level
+      const baseCost = 50000;
+      const currentLevel = user.multitapLevel;
+      const nextCost = Math.floor(baseCost * Math.pow(1.2, currentLevel));
+
+      if (user.points < nextCost) {
+          return res.status(400).json({ message: 'Not enough points to upgrade Multitap' });
+      }
+
+      // Deduct points and upgrade level
+      user.points -= nextCost;
+      user.multitapLevel += 1;
+      await user.save();
+
+      return res.json({ success: true, newLevel: user.multitapLevel, remainingPoints: user.points });
+  } catch (error) {
+      console.error("Error upgrading Multitap:", error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Route to upgrade Energy Limit
+app.post('/user/:telegramId/energy_limit_upgrade', async (req, res) => {
+  const { telegramId } = req.params;
+
+  try {
+      const user = await itemModel.findOne({ telegramId });
+
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Calculate the coin cost for the next level
+      const baseCost = 100000;
+      const currentLevel = user.energyLimitLevel;
+      const nextCost = Math.floor(baseCost * Math.pow(1.2, currentLevel));
+
+      if (user.points < nextCost) {
+          return res.status(400).json({ message: 'Not enough points to upgrade Energy Limit' });
+      }
+
+      // Deduct points and upgrade level
+      user.points -= nextCost;
+      user.energyLimitLevel += 1;
+      await user.save();
+
+      return res.json({ success: true, newLevel: user.energyLimitLevel, remainingPoints: user.points });
+  } catch (error) {
+      console.error("Error upgrading Energy Limit:", error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 app.listen(process.env.PORT, () => {
     console.log("App is running on port " + process.env.PORT);
 });

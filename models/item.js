@@ -6,9 +6,15 @@ const itemSchema = new mongoose.Schema({
     pph: {type: Number, default:0},
     tasks_completed: { type: [String], default: [] }, // Array of completed tasks
     lastPointsUpdateTimestamp: { type: Date, default: Date.now }, // Last update to points
-    lastEnergyUpdateTimestamp: { type: Date, default: Date.now }, // Last update to energy
-    lastEnergyRefillsTimestamp: { type: Date, default: Date.now }, // Last time energy refills were updated
-    levels: [{ title: String, level: Number, achievedAt: Date }] // Track levels with titles
+    levels: [{ title: String, level: Number, achievedAt: Date }], // Track levels with titles
+    fullTankCount:{type: Number, default:0},
+    lastFullTankUpgradeTimestamp:{ type: Date, default: Date.now },
+    multitapLevel: {type:Number, default:0},
+    energyLimitLevel: {type:Number, default:0}
+
+
+
+
 });
 
 // Create the model using the schema

@@ -285,6 +285,9 @@ app.post('/user/:telegramId/full_tank_upgrade', async (req, res) => {
       // Increment the count and update the timestamp
       user.fullTankCount += 1;
       user.lastFullTankUpgradeTimestamp = now;
+      if(user.energy<user.energyLimit) {
+        user.energy = user.energyLimit;
+      }
 
       await user.save();
       return res.json({ success: true, fullTankCount: user.fullTankCount });
@@ -350,6 +353,7 @@ app.post('/user/:telegramId/energy_limit_upgrade', async (req, res) => {
       // Deduct points and upgrade level
       user.points -= nextCost;
       user.energyLimitLevel += 1;
+      user.energy +=500;
       await user.save();
 
       return res.json({ success: true, newLevel: user.energyLimitLevel, remainingPoints: user.points });

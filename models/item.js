@@ -10,7 +10,9 @@ const itemSchema = new mongoose.Schema({
     fullTankCount:{type: Number, default:0},
     lastFullTankUpgradeTimestamp:{ type: Date, default: Date.now },
     multitapLevel: {type:Number, default:0},
-    energyLimitLevel: {type:Number, default:0}
+    energyLimitLevel: {type:Number, default:0},
+    energyLimit: {type:Number, default:5000},
+    energy: {type:Number, default:0}
 
 
 

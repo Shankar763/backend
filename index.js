@@ -221,18 +221,19 @@ app.post('/refer/referrals', async (req, res) => {
       user = new refer({ userId, referrerId, referrals: [] });
     }
 
-    // if(!user2)
-    // {
-    //   user = new refer({ userId=[referrerId], referrerId=[], referrals: [] });
-    // }
+    if(!user2)
+    {
+      user = new refer({ userId=[referrerId], referrerId=[], referrals: [] });
+    }
 
-    // // Save referrer if not self-referring and referrer not already added
-    // if (userId !== referrerId && !user.referrals.includes(referrerId)) {
-    //   user2.referrals.push(userId);
-    // }
+    // Save referrer if not self-referring and referrer not already added
+    if (user2 & user2.referrals.includes(userId)) {
+      user2.referrals.push(userId);
+    }
 
     // Save the user in the database
     await user.save();
+    await user2.save();
     return res.json({ success: true });
   } catch (error) {
     console.error('Error saving referral:', error);

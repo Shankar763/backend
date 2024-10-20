@@ -214,16 +214,22 @@ app.post('/refer/referrals', async (req, res) => {
 
     // Check if the user already exists
     let user = await refer.findOne({ userId });
+    let user2 = await refer.findOne({referrerId});
 
     if (!user) {
       console.log('Creating new user');
       user = new refer({ userId, referrerId, referrals: [] });
     }
 
-    // Save referrer if not self-referring and referrer not already added
-    if (userId !== referrerId && !user.referrals.includes(referrerId)) {
-      user.referrals.push(referrerId);
-    }
+    // if(!user2)
+    // {
+    //   user = new refer({ userId=[referrerId], referrerId=[], referrals: [] });
+    // }
+
+    // // Save referrer if not self-referring and referrer not already added
+    // if (userId !== referrerId && !user.referrals.includes(referrerId)) {
+    //   user2.referrals.push(userId);
+    // }
 
     // Save the user in the database
     await user.save();

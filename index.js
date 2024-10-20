@@ -208,38 +208,46 @@ app.post('/refer/referrals', async (req, res) => {
     return res.status(400).json({ error: 'Missing userId or referrerId' });
   }
 
+  if (userId === referrerId) {
+    return res.status(400).json({ error: 'Users cannot refer themselves' });
+  }
+
   try {
     // Log data
     console.log('Incoming data:', userId, referrerId);
 
-    // Check if the user already exists
+    // Check if the user already exists in the database
     let user = await refer.findOne({ userId });
-    let user2 = await refer.findOne({referrerId});
+    let referrer = await refer.findOne({ userId: referrerId });
 
     if (!user) {
       console.log('Creating new user');
       user = new refer({ userId, referrerId, referrals: [] });
     }
 
-    if(!user2)
-    {
-      user = new refer({ userId=[referrerId], referrerId=[], referrals: [] });
+    // If the referrer doesn't exist, create a new referrer user
+    if (!referrer) {
+      console.log('Creating new referrer');
+      referrer = new refer({ userId: referrerId, referrerId: null, referrals: [] });
     }
 
-    // Save referrer if not self-referring and referrer not already added
-    if (user2 & user2.referrals.includes(userId)) {
-      user2.referrals.push(userId);
+    // Save referral only if not already referred by this referrer
+    if (!referrer.referrals.includes(userId)) {
+      referrer.referrals.push(userId);
+      console.log(`Added ${userId} to ${referrerId}'s referral list`);
     }
 
-    // Save the user in the database
+    // Save both the user and the referrer to the database
     await user.save();
-    await user2.save();
+    await referrer.save();
+
     return res.json({ success: true });
   } catch (error) {
     console.error('Error saving referral:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 // GET: Fetch referral data
 app.get('/refer/referrals', async (req, res) => {

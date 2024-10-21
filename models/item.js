@@ -12,7 +12,7 @@ const itemSchema = new mongoose.Schema({
     multitapLevel: {type:Number, default:0},
     energyLimitLevel: {type:Number, default:0},
     energyLimit: {type:Number, default:5000},
-    energy: {type:Number, default:0}
+    energy: {type:Number, default:5000}
 
 
 

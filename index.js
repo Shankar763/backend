@@ -18,7 +18,7 @@ app.get('/users/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const user = await User.findOne({ userId });
+    const user = await itemModel.findOne({ userId });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

@@ -165,6 +165,7 @@ app.post('/user/:telegramId', async (req, res) => {
         let user = await itemModel.findOne({ telegramId }); // Search for user by Telegram ID
         if (user) {
             // Update user data
+            user.fullName = userData.fullName;
             user.points = userData.points;
             user.energy = userData.energy; // Ensure energy is defined in your schema
             user.lastPointsUpdateTimestamp = new Date();

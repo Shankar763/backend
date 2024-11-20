@@ -13,6 +13,24 @@ app.use(cors({
 }));
 connectDB();
 
+// Route to fetch user details by userId
+app.get('/users/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json({ fullName: user.fullName });
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Route to check if a user exists by telegramId
 app.get('/user/checkdb/:telegramId', async (req, res) => {
     const { telegramId } = req.params;

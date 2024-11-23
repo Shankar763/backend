@@ -13,6 +13,24 @@ app.use(cors({
 }));
 connectDB();
 
+app.get('/users/top', async (req, res) => {
+  try {
+    // Fetch the top 100 users by points, sorted in descending order
+    const users = await itemModel.find()
+      .sort({ points: -1 })
+      .limit(100); // Limit to 100 users
+
+    // If users are found, return the modified list with full name or 'Unknown'
+    const modifiedUsers = users.map(user => ({
+      fullName: user.fullName || 'Unknown', // If full name is not available, return 'Unknown'
+    }));
+    res.json(modifiedUsers);
+  } catch (error) {
+    console.error("Error fetching top users:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // Route to fetch user details by userId
 app.get('/users/:userId', async (req, res) => {
   const { userId } = req.params;

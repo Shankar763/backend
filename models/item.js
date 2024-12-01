@@ -4,6 +4,7 @@ const itemSchema = new mongoose.Schema({
     telegramId: { type: String, required: true, unique: true }, // Unique ID for each user
     fullName: { type: String, required: true}, // full Name for each user
     points: { type: Number, default: 0 }, // Points accumulated by the user
+    usd: {type:Number, default:0},
     pph: {type: Number, default:0},
     tasks_completed: { type: [String], default: [] }, // Array of completed tasks
     lastPointsUpdateTimestamp: { type: Date, default: Date.now }, // Last update to points

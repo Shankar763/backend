@@ -187,11 +187,8 @@ app.post('/user/:telegramId', async (req, res) => {
             user.points = userData.points;
             user.energy = userData.energy; // Ensure energy is defined in your schema
             user.lastPointsUpdateTimestamp = new Date();
-           // Update rewards only if they are provided
-           if (userData.rewards) {
-            // Optionally validate the structure of rewards here
-            user.rewards = userData.rewards; // Update rewards
-        }
+            user.isClaimed = userData.isClaimed;
+            user.lastClaimedDate = userData.lastClaimedDate;
             await user.save();
         } else {
             // Create a new user

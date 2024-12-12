@@ -15,7 +15,8 @@ const itemSchema = new mongoose.Schema({
     energyLimitLevel: {type:Number, default:0},
     energyLimit: {type:Number, default:5000},
     energy: {type:Number, default:5000},
-    rewards: [{isClaimed:Boolean, lastClaimedDate: Date}]
+    isClaimed:{type:Boolean},
+    lastClaimedDate: {type:Date}
 
 
 });
